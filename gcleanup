@@ -1,0 +1,18 @@
+#! /bin/bash
+
+echo "Checking out default branch"
+shopt -s nocasematch
+if [[ $PWD == *"/hosted"* ]] || [[ $PWD == *"/ember-app"* ]]; then
+  echo 'In Hosted or ember-app, checking out develop'
+  git checkout develop;
+else
+  default_branch=$(git remote show origin | sed -n '/HEAD branch/s/.*: //p')
+  echo "Not in Hosted or ember-app, checking out $default_branch"
+  git checkout "$default_branch";
+fi
+
+echo "Pulling latest"
+git pull origin "$git_current_branch"
+
+echo "Fetching branches"
+git fetch --prune;
